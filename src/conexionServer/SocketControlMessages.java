@@ -6,6 +6,7 @@
 package conexionServer;
 
 import contenido.ServerContent;
+import contenido.VerificarContenido;
 import demomessengerserver.SocketController;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,38 +61,35 @@ public class SocketControlMessages {
     public void read(String dato) {
         String[] datos = dato.split(" ");
         System.out.println("- " + datos[0] + " * " + datos[1]);
-        String message = "";
         
         switch(datos[0]){
+            case "1001":
+                serverContent.setErrorMessage(datos[1]+" "+datos[2]);
+            break;
             case "5000":
                 System.out.println("entro user");
                 String[] userList = datos[1].split(";");
-                if(serverContent.getCurrentUsers()<userList.length){
-                    int k = 0;
-                    while(serverContent.userExist(userList[k])){
-                        k++;
-                    }
-                    serverContent.deleteUser(userList[k]);
-                }else if(serverContent.getCurrentUsers()>userList.length){
-                    int size = userList.length -1;
-                    serverContent.setUser(userList[size]);
-                }
+                VerificarContenido.verificar5000(serverContent, userList);
             break;
             case "4010":
-//                for (int i = 1; i < datos.length; i++) {
-//                    message += datos[i];
-//                }
-//                this.messagePrivate.add(message);
+                System.out.println("Entro private");
+                
+                String messagePrivate = "";
+                for (int i = 1; i < datos.length; i++) {
+                    messagePrivate += datos[i];
+                }
+                serverContent.setMessagePrivate(messagePrivate);
             break;
 
             case "2000":
             case "2010":
                 System.out.println("Entro all");
+                String messagePublic = "";
                 for (int i = 1; i < datos.length; i++) {
-//                    message += datos[i];
+                    messagePublic += datos[i];
                       System.out.println(datos[i]);
                 }
-                //this.messageAll.add(message);
+                serverContent.setMessageAll(messagePublic);
             break;
         }
     }
@@ -130,14 +128,22 @@ public class SocketControlMessages {
     }
     
     
-    public boolean isNewUsers(){
-        return serverContent.isNewUsers();
+    public boolean thereAreNewUsers(){
+        return serverContent.thereAreNewUsers();
     }
     public boolean isNewPublicMessage(){
         return serverContent.isNewPublicMessage();
     }
     public boolean isNewPrivateMessage(){
         return serverContent.isNewPrivateMessage();
+    }
+    
+    public String isUserValid(){
+        String content = serverContent.thereAreErrorMessage();
+        if(content!=null){
+            return content;
+        }
+        return null;
     }
     
 }

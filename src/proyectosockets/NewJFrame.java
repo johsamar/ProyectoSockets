@@ -6,6 +6,8 @@
 package proyectosockets;
 
 import conexionServer.SocketControlMessages;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  * 
@@ -20,7 +22,10 @@ public class NewJFrame extends javax.swing.JFrame {
     public NewJFrame() {
         scm = new SocketControlMessages();
         initComponents();
-        initUpdates();
+        usersActiveList.removeAll();
+        boxUsers.removeAllItems();
+        this.buttonPrivateMessage.setEnabled(false);
+        this.buttonPublicMessage.setEnabled(false);
     }
 
     /**
@@ -41,18 +46,20 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanelActiveUsers = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        UsersActiveList = new javax.swing.JList<>();
+        usersActiveList = new javax.swing.JList<>();
         labelActiveUsers = new javax.swing.JLabel();
         jPanelSentMessages = new javax.swing.JPanel();
         buttonPublicMessage = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         buttonPrivateMessage = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        boxUsers = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         buttonSalir = new javax.swing.JButton();
+        textUserRegister = new javax.swing.JTextField();
+        buttonRegister = new javax.swing.JButton();
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -67,12 +74,12 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jScrollPrivate.setViewportView(jLabel2);
 
-        UsersActiveList.setModel(new javax.swing.AbstractListModel<String>() {
+        usersActiveList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane6.setViewportView(UsersActiveList);
+        jScrollPane6.setViewportView(usersActiveList);
 
         labelActiveUsers.setText("0");
 
@@ -117,7 +124,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        boxUsers.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanelSentMessagesLayout = new javax.swing.GroupLayout(jPanelSentMessages);
         jPanelSentMessages.setLayout(jPanelSentMessagesLayout);
@@ -132,7 +139,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addGroup(jPanelSentMessagesLayout.createSequentialGroup()
                         .addComponent(buttonPrivateMessage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(boxUsers, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSentMessagesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -147,7 +154,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelSentMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonPrivateMessage)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(boxUsers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPublicMessage)
                 .addContainerGap(8, Short.MAX_VALUE))
@@ -158,6 +165,18 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel3.setText("Mensajes Publicos");
 
         buttonSalir.setText("Salir");
+        buttonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSalirActionPerformed(evt);
+            }
+        });
+
+        buttonRegister.setText("Registrar");
+        buttonRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegisterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JPanelBackgroundLayout = new javax.swing.GroupLayout(JPanelBackground);
         JPanelBackground.setLayout(JPanelBackgroundLayout);
@@ -172,7 +191,11 @@ public class NewJFrame extends javax.swing.JFrame {
                             .addComponent(jScrollPrivate, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(jLabel1)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(JPanelBackgroundLayout.createSequentialGroup()
+                                .addComponent(textUserRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(buttonRegister))))
                     .addGroup(JPanelBackgroundLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(buttonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -185,15 +208,18 @@ public class NewJFrame extends javax.swing.JFrame {
         JPanelBackgroundLayout.setVerticalGroup(
             JPanelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPanelBackgroundLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(JPanelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(JPanelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textUserRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonRegister))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JPanelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(JPanelBackgroundLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPublic, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPublic, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanelActiveUsers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addGroup(JPanelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,6 +257,58 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonPublicMessageActionPerformed
 
+    private void buttonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterActionPerformed
+        String userToRegister = textUserRegister.getText();
+        if(userToRegister.length()==0){
+            
+        }else{
+            scm.RegisterUser(userToRegister);
+            String error = scm.isUserValid();
+            if(error!=null){
+                this.buttonPrivateMessage.setEnabled(true);
+                this.buttonPublicMessage.setEnabled(true);
+                this.buttonRegister.setEnabled(false);
+                this.textUserRegister.setEnabled(false);
+                initUpdates();
+            }else{
+                JOptionPane.showMessageDialog(null, error, "ERROR_USER", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+        
+    }//GEN-LAST:event_buttonRegisterActionPerformed
+
+    private void buttonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSalirActionPerformed
+        scm.exit();
+        this.buttonPrivateMessage.setEnabled(false);
+        this.buttonPublicMessage.setEnabled(false);
+        this.buttonRegister.setEnabled(true);
+        this.textUserRegister.setEnabled(true);
+        this.textUserRegister.setText("");
+        
+    }//GEN-LAST:event_buttonSalirActionPerformed
+    private void initUpdates(){
+        Thread updateWindow;
+        scm.readText();
+        Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                if(scm.thereAreNewUsers()){
+                    ArrayList<String> usuarios= scm.getUsers();
+                    for(String usuario:usuarios){
+                        addBoxItem(usuario);
+                    }
+                }
+            }
+        }
+        };
+        updateWindow = new Thread(runnable);
+        updateWindow.start();
+    }
+    private void addBoxItem(String usuario){
+        this.boxUsers.addItem(usuario);
+    }
     /**
      * @param args the command line arguments
      */
@@ -265,28 +343,15 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
-    private void initUpdates(){
-    Thread updateWindow;
-    scm.readText();
-    Runnable runnable = new Runnable() {
-    @Override
-    public void run() {
-        while (true) {
-            
-        }
-    }
-    };
-    updateWindow = new Thread(runnable);
-    updateWindow.start();
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPanelBackground;
-    private javax.swing.JList<String> UsersActiveList;
+    private javax.swing.JComboBox<String> boxUsers;
     private javax.swing.JButton buttonPrivateMessage;
     private javax.swing.JButton buttonPublicMessage;
+    private javax.swing.JButton buttonRegister;
     private javax.swing.JButton buttonSalir;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -302,5 +367,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelActiveUsers;
     private javax.swing.JLabel labelPublicMessages;
+    private javax.swing.JTextField textUserRegister;
+    private javax.swing.JList<String> usersActiveList;
     // End of variables declaration//GEN-END:variables
 }

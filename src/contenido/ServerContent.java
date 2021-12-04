@@ -19,11 +19,16 @@ public class ServerContent {
     private int currentUsers;
     private int currentmessagePrivate;
     private int currentmessageAll;
+    
+    private String errorMessage;
 
     public ServerContent() {
         users = new ArrayList<>();
         messagePrivate = new ArrayList<>();
         messageAll = new ArrayList<>();
+        
+        currentUsers = 0;
+        errorMessage="";
     }
 
     public int getCurrentUsers() {
@@ -67,10 +72,11 @@ public class ServerContent {
         return messageAll.get(last);
     }
     
-    public boolean isNewUsers(){
+    public boolean thereAreNewUsers(){
         if(users.size()==currentUsers){
             return true;
         }
+        currentUsers = users.size()-1;
         return false;
     }
     
@@ -86,4 +92,18 @@ public class ServerContent {
         }
         return false;
     }
+
+    public String thereAreErrorMessage() {
+        if(errorMessage.length()==0){
+            String error = errorMessage;
+            errorMessage="";
+            return error;
+        }
+        return null;
+    }
+
+    public void setErrorMessage(String newErrorMessage) {
+        errorMessage = newErrorMessage;
+    }
+    
 }

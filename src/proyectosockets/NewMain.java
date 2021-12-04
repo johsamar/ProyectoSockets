@@ -6,6 +6,7 @@
 package proyectosockets;
 
 import conexionServer.SocketControlMessages;
+import java.util.ArrayList;
 
 /**
  *
@@ -21,14 +22,15 @@ public class NewMain {
         //while(true){
         scm.readText();
         System.out.println("SENDALL");
-        scm.RegisterUser("samuel");
+        scm.RegisterUser("usuario10");
         scm.sendPrivateMessage("Hola tu", "usuario1");
         scm.sendPublicMessage("De mi para el mundo");
         scm.getActiveUsers();
         while(true){
-            
+            if(scm.thereAreNewUsers()){
+                System.out.println(scm.thereAreNewUsers());
+            }
         }
-
     }
 
 }
