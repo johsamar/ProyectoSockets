@@ -25,6 +25,7 @@ public class SocketControlMessages {
     private final SocketController socketControl;
     
     private ServerContent serverContent;
+    private String currentUser;
     
     public SocketControlMessages() {
         host = "127.0.0.1";
@@ -36,9 +37,14 @@ public class SocketControlMessages {
         }
         socketControl=socketController;
         serverContent = new ServerContent();
+        currentUser = "";
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
     }
     
-    public ArrayList<String> getUsers() {
+    public synchronized ArrayList<String> getUsers() {
         return serverContent.getUsers();
     }
 
@@ -60,34 +66,48 @@ public class SocketControlMessages {
     
     public void read(String dato) {
         String[] datos = dato.split(" ");
-        System.out.println("- " + datos[0] + " * " + datos[1]);
+        //System.out.println("- " + datos[0] + " * " + datos[1]);
         
         switch(datos[0]){
             case "1001":
+                currentUser = "";
                 serverContent.setErrorMessage(datos[1]+" "+datos[2]);
             break;
             case "5000":
                 System.out.println("entro user");
                 String[] userList = datos[1].split(";");
+                serverContent.setCurrentUser(userList[userList.length-1]);
                 VerificarContenido.verificar5000(serverContent, userList);
+                
+            break;
+            case "4000":
             break;
             case "4010":
                 System.out.println("Entro private");
                 
                 String messagePrivate = "";
                 for (int i = 1; i < datos.length; i++) {
-                    messagePrivate += datos[i];
+                    if(i==1){
+                        messagePrivate += datos[i]+": ";
+                    }else{
+                        messagePrivate += datos[i]+" ";
+                    }
+                    
                 }
                 serverContent.setMessagePrivate(messagePrivate);
             break;
 
             case "2000":
+                break;
             case "2010":
                 System.out.println("Entro all");
                 String messagePublic = "";
                 for (int i = 1; i < datos.length; i++) {
-                    messagePublic += datos[i];
-                      System.out.println(datos[i]);
+                    if(i==1){
+                    messagePublic += datos[i]+": ";
+                    }else{
+                        messagePublic += datos[i]+" ";
+                    }
                 }
                 serverContent.setMessageAll(messagePublic);
             break;
@@ -102,6 +122,7 @@ public class SocketControlMessages {
         String command = "REGISTER " + usuario;
         if (this.socketController != null) {
             socketController.writeText(command);
+            currentUser = usuario;
         }
     }
 
@@ -115,11 +136,13 @@ public class SocketControlMessages {
     public void sendPrivateMessage(String message, String user) {
         String command = "SEND " + user + " " + message;
         socketControl.writeText(command);
+        serverContent.setMessagePrivate("Tu a "+user+": "+message);
     }
 
     public void sendPublicMessage(String message) {
         String command = "SENDALL " + message;
         socketControl.writeText(command);
+        serverContent.setMessageAll("Tú: "+message);
     }
 
     public void exit() {
@@ -128,17 +151,17 @@ public class SocketControlMessages {
     }
     
     
-    public boolean thereAreNewUsers(){
+    public synchronized boolean thereAreNewUsers(){
         return serverContent.thereAreNewUsers();
     }
-    public boolean isNewPublicMessage(){
+    public synchronized boolean isNewPublicMessage(){
         return serverContent.isNewPublicMessage();
     }
-    public boolean isNewPrivateMessage(){
+    public synchronized boolean isNewPrivateMessage(){
         return serverContent.isNewPrivateMessage();
     }
     
-    public String isUserValid(){
+    public synchronized String isUserValid(){
         String content = serverContent.thereAreErrorMessage();
         if(content!=null){
             return content;

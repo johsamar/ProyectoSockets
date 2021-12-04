@@ -21,21 +21,26 @@ public class ServerContent {
     private int currentmessageAll;
     
     private String errorMessage;
-
+    private String currentUser;
+    
     public ServerContent() {
         users = new ArrayList<>();
         messagePrivate = new ArrayList<>();
         messageAll = new ArrayList<>();
         
         currentUsers = 0;
+        currentmessagePrivate=0;
+        currentmessageAll=0;
         errorMessage="";
     }
 
     public int getCurrentUsers() {
         return currentUsers;
     }
-    
-    public void setUser(String newUsers) {
+    public void resetUsers(){
+        users.clear();
+    }
+    public synchronized void setUser(String newUsers) {
         currentUsers = users.size();
         users.add(newUsers);
     }
@@ -45,6 +50,14 @@ public class ServerContent {
     public void deleteUser(String previousUsers) {
         currentUsers = users.size();
         users.remove(previousUsers);
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
     
     public void setMessagePrivate(String newMessagePrivate) {
@@ -73,21 +86,24 @@ public class ServerContent {
     }
     
     public boolean thereAreNewUsers(){
-        if(users.size()==currentUsers){
+        if(users.size()!=currentUsers){
+            currentUsers = users.size();
             return true;
         }
-        currentUsers = users.size()-1;
         return false;
     }
     
     public boolean isNewPrivateMessage(){
-        if(messagePrivate.size()==currentmessagePrivate){
+        if(messagePrivate.size()!=currentmessagePrivate){
+            currentmessagePrivate=messagePrivate.size();
             return true;
         }
         return false;
     }
+    
     public boolean isNewPublicMessage(){
-        if(messageAll.size()==currentmessageAll){
+        if(messageAll.size()!=currentmessageAll){
+            currentmessageAll=messageAll.size();
             return true;
         }
         return false;

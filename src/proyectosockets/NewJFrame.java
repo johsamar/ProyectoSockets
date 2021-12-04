@@ -10,21 +10,32 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
- * 
+ *
  * @author SAMUEL-PC
  */
 public class NewJFrame extends javax.swing.JFrame {
-    
+
     private SocketControlMessages scm;
+
+    private ArrayList<String> usuarios;
+
+    private String allPublicMessages;
+    private String allPrivateMessages;
+
     /**
      * Creates new form NewJFrame
      */
     public NewJFrame() {
         scm = new SocketControlMessages();
+        usuarios = new ArrayList<>();
+        allPublicMessages = "<html>";
+        allPrivateMessages = "<html>";
+
         initComponents();
-        usersActiveList.removeAll();
+
         boxUsers.removeAllItems();
-        this.buttonPrivateMessage.setEnabled(false);
+        boxUsers.addItem("Para todos");
+        this.buttonSendMessage.setEnabled(false);
         this.buttonPublicMessage.setEnabled(false);
     }
 
@@ -43,16 +54,15 @@ public class NewJFrame extends javax.swing.JFrame {
         jScrollPublic = new javax.swing.JScrollPane();
         labelPublicMessages = new javax.swing.JLabel();
         jScrollPrivate = new javax.swing.JScrollPane();
-        jLabel2 = new javax.swing.JLabel();
+        lablePrivateMessages = new javax.swing.JLabel();
         jPanelActiveUsers = new javax.swing.JPanel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        usersActiveList = new javax.swing.JList<>();
         labelActiveUsers = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        labelUsersActive = new javax.swing.JLabel();
         jPanelSentMessages = new javax.swing.JPanel();
-        buttonPublicMessage = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        buttonPrivateMessage = new javax.swing.JButton();
+        areaMessage = new javax.swing.JTextArea();
+        buttonSendMessage = new javax.swing.JButton();
         boxUsers = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
@@ -70,18 +80,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        labelPublicMessages.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jScrollPublic.setViewportView(labelPublicMessages);
 
-        jScrollPrivate.setViewportView(jLabel2);
-
-        usersActiveList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane6.setViewportView(usersActiveList);
+        lablePrivateMessages.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jScrollPrivate.setViewportView(lablePrivateMessages);
 
         labelActiveUsers.setText("0");
+
+        labelUsersActive.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jScrollPane1.setViewportView(labelUsersActive);
 
         javax.swing.GroupLayout jPanelActiveUsersLayout = new javax.swing.GroupLayout(jPanelActiveUsers);
         jPanelActiveUsers.setLayout(jPanelActiveUsersLayout);
@@ -89,38 +97,27 @@ public class NewJFrame extends javax.swing.JFrame {
             jPanelActiveUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelActiveUsersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelActiveUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelActiveUsersLayout.createSequentialGroup()
-                        .addComponent(labelActiveUsers, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                        .addGap(81, 81, 81))
-                    .addComponent(jScrollPane6))
-                .addContainerGap())
+                .addComponent(labelActiveUsers, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                .addGap(87, 87, 87))
+            .addComponent(jScrollPane1)
         );
         jPanelActiveUsersLayout.setVerticalGroup(
             jPanelActiveUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelActiveUsersLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelActiveUsers)
                 .addContainerGap())
         );
 
-        buttonPublicMessage.setText("Enviar a todos");
-        buttonPublicMessage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPublicMessageActionPerformed(evt);
-            }
-        });
+        areaMessage.setColumns(20);
+        areaMessage.setRows(5);
+        jScrollPane5.setViewportView(areaMessage);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane5.setViewportView(jTextArea1);
-
-        buttonPrivateMessage.setText("Enviar a");
-        buttonPrivateMessage.addActionListener(new java.awt.event.ActionListener() {
+        buttonSendMessage.setText("Enviar a");
+        buttonSendMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrivateMessageActionPerformed(evt);
+                buttonSendMessageActionPerformed(evt);
             }
         });
 
@@ -137,14 +134,10 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanelSentMessagesLayout.createSequentialGroup()
-                        .addComponent(buttonPrivateMessage)
+                        .addComponent(buttonSendMessage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(boxUsers, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSentMessagesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonPublicMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
         );
         jPanelSentMessagesLayout.setVerticalGroup(
             jPanelSentMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,11 +146,9 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelSentMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonPrivateMessage)
+                    .addComponent(buttonSendMessage)
                     .addComponent(boxUsers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonPublicMessage)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jLabel1.setText("Mensajes Privados");
@@ -249,66 +240,101 @@ public class NewJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonPrivateMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrivateMessageActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrivateMessageActionPerformed
+    private void buttonSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSendMessageActionPerformed
+        String mensaje = areaMessage.getText();
+        if (mensaje.length() > 0) {
+            if (this.boxUsers.getSelectedIndex() == 0) {
+                    scm.sendPublicMessage(mensaje);                    
+            } else {
+                String destino = this.boxUsers.getSelectedItem().toString();
+                scm.sendPrivateMessage(mensaje, destino);
+            }
+            areaMessage.setText("");
+        }
 
-    private void buttonPublicMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPublicMessageActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPublicMessageActionPerformed
+    }//GEN-LAST:event_buttonSendMessageActionPerformed
 
     private void buttonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterActionPerformed
         String userToRegister = textUserRegister.getText();
-        if(userToRegister.length()==0){
-            
-        }else{
+        if (userToRegister.length() == 0) {
+
+        } else {
             scm.RegisterUser(userToRegister);
             String error = scm.isUserValid();
-            if(error!=null){
-                this.buttonPrivateMessage.setEnabled(true);
+            if (error != null) {
+                this.buttonSendMessage.setEnabled(true);
                 this.buttonPublicMessage.setEnabled(true);
                 this.buttonRegister.setEnabled(false);
                 this.textUserRegister.setEnabled(false);
                 initUpdates();
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, error, "ERROR_USER", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         }
-        
+
     }//GEN-LAST:event_buttonRegisterActionPerformed
 
     private void buttonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSalirActionPerformed
         scm.exit();
-        this.buttonPrivateMessage.setEnabled(false);
+        this.buttonSendMessage.setEnabled(false);
         this.buttonPublicMessage.setEnabled(false);
         this.buttonRegister.setEnabled(true);
         this.textUserRegister.setEnabled(true);
         this.textUserRegister.setText("");
-        
+
     }//GEN-LAST:event_buttonSalirActionPerformed
-    private void initUpdates(){
+    private void initUpdates() {
         Thread updateWindow;
         scm.readText();
         Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            while (true) {
-                if(scm.thereAreNewUsers()){
-                    ArrayList<String> usuarios= scm.getUsers();
-                    for(String usuario:usuarios){
-                        addBoxItem(usuario);
+            @Override
+            public void run() {
+                while (true) {
+                    if (scm.thereAreNewUsers()) {
+                        usuarios = scm.getUsers();
+                        labelActiveUsers.setText("Usuarios Activos:" + (usuarios.size()-1));
+                        addBoxItems();
+                    }
+                    if (scm.isNewPublicMessage()) {
+                        showMessagePublic(scm.getMessage4All());
+                    }
+                    if (scm.isNewPrivateMessage()) {
+                        showMessagePrivate(scm.getMessageInPrivate());
                     }
                 }
             }
-        }
         };
         updateWindow = new Thread(runnable);
         updateWindow.start();
     }
-    private void addBoxItem(String usuario){
-        this.boxUsers.addItem(usuario);
+
+    private synchronized void addBoxItems() {
+        this.boxUsers.removeAllItems();
+        boxUsers.addItem("Para todos");
+        String content = "<html>";
+        for (int i = 0; i < usuarios.size(); i++) {
+            String user = usuarios.get(i);
+            if (!user.equals(scm.getCurrentUser())) {
+                content += user + "<br>";
+                this.boxUsers.addItem(user);
+            } 
+        }
+        this.labelUsersActive.setText(content);
     }
+
+    private synchronized void showMessagePublic(String message) {
+        System.out.println("1");
+        allPublicMessages += message + "<br>";
+        this.labelPublicMessages.setText(allPublicMessages);
+    }
+
+    private synchronized void showMessagePrivate(String message) {
+        System.out.println("1");
+        allPrivateMessages += message + "<br>";
+        this.lablePrivateMessages.setText(allPrivateMessages);
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -347,27 +373,26 @@ public class NewJFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPanelBackground;
+    private javax.swing.JTextArea areaMessage;
     private javax.swing.JComboBox<String> boxUsers;
-    private javax.swing.JButton buttonPrivateMessage;
-    private javax.swing.JButton buttonPublicMessage;
     private javax.swing.JButton buttonRegister;
     private javax.swing.JButton buttonSalir;
+    private javax.swing.JButton buttonSendMessage;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanelActiveUsers;
     private javax.swing.JPanel jPanelSentMessages;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPrivate;
     private javax.swing.JScrollPane jScrollPublic;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelActiveUsers;
     private javax.swing.JLabel labelPublicMessages;
+    private javax.swing.JLabel labelUsersActive;
+    private javax.swing.JLabel lablePrivateMessages;
     private javax.swing.JTextField textUserRegister;
-    private javax.swing.JList<String> usersActiveList;
     // End of variables declaration//GEN-END:variables
 }

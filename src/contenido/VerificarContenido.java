@@ -11,21 +11,23 @@ package contenido;
  */
 public class VerificarContenido {
 
-    public static void verificar5000(ServerContent serverContent, String[] userList) {
-        synchronized (serverContent) {
-            System.out.println("HOLLA 5000");
-            if (serverContent.getCurrentUsers() < userList.length) {
-                System.out.println("if 1");
-                int size = userList.length - 1;
-                serverContent.setUser(userList[size]);
-            } else if (serverContent.getCurrentUsers() > userList.length) {
-                System.out.println("if 2");
-                int k = 0;
-                while (serverContent.userExist(userList[k])) {
-                    k++;
-                }
-                serverContent.deleteUser(userList[k]);
+    public static synchronized void verificar5000(ServerContent serverContent, String[] userList) {
+        System.out.println("HOLLA 5000");
+        
+        if (serverContent.getCurrentUsers() < userList.length-1) {
+            System.out.println("if 1");
+            serverContent.resetUsers();
+            for(String userL: userList){
+                serverContent.setUser(userL);
             }
+        } else if (serverContent.getCurrentUsers() > userList.length-1) {
+            System.out.println("if 2");
+            int k = 0;
+            while (k<userList.length & !serverContent.getUsers().contains(userList[k])) {
+                k++;
+            }
+            serverContent.deleteUser(userList[k]);
         }
+        
     }
 }
