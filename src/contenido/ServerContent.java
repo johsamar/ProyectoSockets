@@ -34,20 +34,25 @@ public class ServerContent {
         errorMessage="";
     }
 
-    public int getCurrentUsers() {
+    public synchronized int getCurrentUsers() {
         return currentUsers;
     }
     public void resetUsers(){
         users.clear();
+        currentUsers = users.size();
     }
-    public synchronized void setUser(String newUsers) {
+    public void setUser(String newUsers) {
+        users.add(newUsers);
+        currentUsers = users.size();
+    }
+    public synchronized void setNewUser(String newUsers) {
         currentUsers = users.size();
         users.add(newUsers);
     }
     public boolean userExist(String user){
         return users.contains(user);
     }
-    public void deleteUser(String previousUsers) {
+    public synchronized void deleteUser(String previousUsers) {
         currentUsers = users.size();
         users.remove(previousUsers);
     }

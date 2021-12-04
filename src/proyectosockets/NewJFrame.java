@@ -36,7 +36,6 @@ public class NewJFrame extends javax.swing.JFrame {
         boxUsers.removeAllItems();
         boxUsers.addItem("Para todos");
         this.buttonSendMessage.setEnabled(false);
-        this.buttonPublicMessage.setEnabled(false);
     }
 
     /**
@@ -263,7 +262,6 @@ public class NewJFrame extends javax.swing.JFrame {
             String error = scm.isUserValid();
             if (error != null) {
                 this.buttonSendMessage.setEnabled(true);
-                this.buttonPublicMessage.setEnabled(true);
                 this.buttonRegister.setEnabled(false);
                 this.textUserRegister.setEnabled(false);
                 initUpdates();
@@ -278,7 +276,6 @@ public class NewJFrame extends javax.swing.JFrame {
     private void buttonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSalirActionPerformed
         scm.exit();
         this.buttonSendMessage.setEnabled(false);
-        this.buttonPublicMessage.setEnabled(false);
         this.buttonRegister.setEnabled(true);
         this.textUserRegister.setEnabled(true);
         this.textUserRegister.setText("");
@@ -324,13 +321,11 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     private synchronized void showMessagePublic(String message) {
-        System.out.println("1");
         allPublicMessages += message + "<br>";
         this.labelPublicMessages.setText(allPublicMessages);
     }
 
     private synchronized void showMessagePrivate(String message) {
-        System.out.println("1");
         allPrivateMessages += message + "<br>";
         this.lablePrivateMessages.setText(allPrivateMessages);
     }
