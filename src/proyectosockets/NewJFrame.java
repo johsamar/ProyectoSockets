@@ -36,6 +36,8 @@ public class NewJFrame extends javax.swing.JFrame {
         boxUsers.removeAllItems();
         boxUsers.addItem("Para todos");
         this.buttonSendMessage.setEnabled(false);
+        this.boxUsers.setEnabled(false);
+        this.buttonSalir.setEnabled(false);
     }
 
     /**
@@ -256,14 +258,19 @@ public class NewJFrame extends javax.swing.JFrame {
     private void buttonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterActionPerformed
         String userToRegister = textUserRegister.getText();
         if (userToRegister.length() == 0) {
-
-        } else {
+            JOptionPane.showMessageDialog(null, "No puede estar vacío", "TEXT_EMPTY", JOptionPane.WARNING_MESSAGE);
+        }
+        else if(userToRegister.length()<8 & userToRegister.length()<15){
+            JOptionPane.showMessageDialog(null, "usuario inválido", "USER ERROR", JOptionPane.ERROR_MESSAGE);
+        }else {
             scm.RegisterUser(userToRegister);
             String error = scm.isUserValid();
             if (error != null) {
                 this.buttonSendMessage.setEnabled(true);
                 this.buttonRegister.setEnabled(false);
                 this.textUserRegister.setEnabled(false);
+                this.boxUsers.setEnabled(true);
+                this.buttonSalir.setEnabled(true);
                 initUpdates();
             } else {
                 JOptionPane.showMessageDialog(null, error, "ERROR_USER", JOptionPane.ERROR_MESSAGE);
@@ -274,11 +281,23 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonRegisterActionPerformed
 
     private void buttonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSalirActionPerformed
+        try{
         scm.exit();
+        }catch(Exception e){
+            
+        }
         this.buttonSendMessage.setEnabled(false);
         this.buttonRegister.setEnabled(true);
         this.textUserRegister.setEnabled(true);
         this.textUserRegister.setText("");
+        this.lablePrivateMessages.setText("");
+        this.labelPublicMessages.setText("");
+        this.labelActiveUsers.setText("");
+        this.boxUsers.setEnabled(false);
+        this.labelUsersActive.setText("");
+        this.labelActiveUsers.setText("");
+        this.buttonSalir.setEnabled(false);
+        
 
     }//GEN-LAST:event_buttonSalirActionPerformed
     private void initUpdates() {
